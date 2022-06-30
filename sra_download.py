@@ -36,21 +36,18 @@ def main():
     parser.add_argument("-o", "--outdir", help="directory where samples will be downloaded")
     parser.add_argument("-c", "--credential", help="path to google drive credential JSON file", default="/mnt/research/VanBuren_Lab/01_code/05_credentials/gdrive_credentials.json")
     parser.add_argument("-s", "--species", help="binomial name of species to download data for")
-
+    parser.add_argument("sd", "--script_dir", help="path to the directory containing this script", default="./")
     args = parser.parse_args()
-    print(args)
-
     outdir = args.outdir
-    print(outdir)
     credential_file = args.credential
-    print(credential_file)
     species = args.species
-    print(species)
+    script_dir = args.script_dir
     df = collect_gdrive_data(credential_file)
     n_samples = write_srr(outdir, df, species)
+    shell_script = os.path.join(script_dir, "slurm_batch_sra_download.sh")
     subprocess.call(["sbatch",
                      "--array=0-"+str(n_samples),
-                     "/mnt/research/VanBuren_Lab/01_code/00_scripts/00_job_submission/slurm_batch_sra_download.sh",
+                     shell_script,
                      outdir])
 
 
