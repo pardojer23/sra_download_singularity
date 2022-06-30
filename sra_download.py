@@ -36,7 +36,7 @@ def main():
     parser.add_argument("-o", "--outdir", help="directory where samples will be downloaded")
     parser.add_argument("-c", "--credential", help="path to google drive credential JSON file", default="/mnt/research/VanBuren_Lab/01_code/05_credentials/gdrive_credentials.json")
     parser.add_argument("-s", "--species", help="binomial name of species to download data for")
-    parser.add_argument("sd", "--script_dir", help="path to the directory containing this script", default="./")
+    parser.add_argument("-sd", "--script_dir", help="path to the directory containing this script", default="./")
     args = parser.parse_args()
     outdir = args.outdir
     credential_file = args.credential
