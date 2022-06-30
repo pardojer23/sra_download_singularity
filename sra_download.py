@@ -7,6 +7,11 @@ import argparse
 
 
 def connect_to_drive(credential_file):
+    """
+    creates a new Google Drive connection.
+    :param credential_file: path to google credential json file for service account
+    :return: google connection object
+    """
     scope = ['https://spreadsheets.google.com/feeds',
          'https://www.googleapis.com/auth/drive']
     credentials = ServiceAccountCredentials.from_json_keyfile_name(credential_file, scope)
@@ -14,6 +19,11 @@ def connect_to_drive(credential_file):
     return gc
 
 def collect_gdrive_data(credential_file):
+    """
+    Collects all data from the master meta data sheet
+    :param credential_file: path to google credential json file for service account
+    :return: pandas dataframe containing the data from the meta data master sheet
+    """
     gc = connect_to_drive(credential_file)
     sheet_obj = gc.open("Meta data sheet for drought comparison project").sheet1
     Data = sheet_obj.get_all_values()
@@ -24,6 +34,13 @@ def collect_gdrive_data(credential_file):
 
 
 def write_srr(outdir, df, species):
+    """
+    Write file containing srr numbers for a given species one per line to a test file.
+    :param outdir: path to directory where file will be written
+    :param df: input dataframe from collect_gdrive_data
+    :param species: binomial name of species to use
+    :return: number of samples in the output file
+    """
     with open(os.path.join(outdir,"sample_file_list.txt"), "w+") as outfile:
         for srr in df.loc[df["Species"] == species]["SRA_number"]:
             outfile.write(srr+"\n")
